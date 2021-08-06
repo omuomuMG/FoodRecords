@@ -32,8 +32,8 @@ class _BottomNavigationBarState extends State<BottomNavigationBarView> {
             title: Text('Home'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            title: Text('Setting'),
+            icon: Icon(Icons.add_circle),
+            title: Text('Add'),
           ),
         ],
         currentIndex: _selectedIndex,

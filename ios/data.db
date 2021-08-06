@@ -1,0 +1,36 @@
+class PostData {
+  late final String food;
+  late final String sentence;
+  late final int id;
+  late final int eatTimeStamp;
+  late final int postTimeStamp;
+  late final int updateTimeStamp;
+
+  PostData(
+      {required this.id,
+      required this.sentence,
+      required this.eatTimeStamp,
+      required this.postTimeStamp,
+      required this.updateTimeStamp});
+}
+
+  Map<String, dynamic> toMap() {
+    return {
+      'food': food,
+      'sentence': sentence,
+      'eatTimeStamp': eatTimeStamp,
+      "postTimeStamp":postTimeStamp,
+      "updateTimeStamp":updateTimeStamp
+    };
+  }
+}
+
+
+var postData = PostData(
+    id: 0,
+    sentence: 'sentence',
+    eatTimeStamp: 1,
+    postTimeStamp: 20,
+    updateTimeStamp: 202);
+
+await db.insert('postData', postData.toMap());
