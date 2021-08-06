@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/all.dart';
+import 'BottomNavigationBar.dart';
 
 void main() {
   runApp(
-    // ①まず最初にApp全体をProviderScopeで囲む
-    const ProviderScope(
+    ProviderScope(
       child: MyApp(),
     ),
   );
@@ -12,5 +12,11 @@ void main() {
 
 class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {}
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Riverpod Sample',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: BottomNavigationBarView(),
+    );
+  }
 }
