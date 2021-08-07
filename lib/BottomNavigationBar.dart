@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_records/FoodListView.dart';
+import 'package:food_records/add.dart';
 
 class BottomNavigationBarView extends StatefulWidget {
   @override
@@ -10,10 +11,7 @@ class BottomNavigationBarView extends StatefulWidget {
 class _BottomNavigationBarState extends State<BottomNavigationBarView> {
   int _selectedIndex = 0;
 
-  static List<Widget> _pageList = [
-    FoodList(),
-    CustomPage(pannelColor: Colors.pink, title: 'Search')
-  ];
+  static List<Widget> _pageList = [FoodList(), MySqlPage()];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -61,9 +59,7 @@ class CustomPage extends StatelessWidget {
               color: pannelColor,
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
           child: Center(
-            child: Text(
-              title,
-            ),
+            child: Text("a"),
           ),
         ),
       ),
