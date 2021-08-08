@@ -1,8 +1,28 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/all.dart';
 import 'package:food_records/sqlLite.dart';
 import 'package:sqflite/sqflite.dart';
+import 'dart:async';
+import 'package:path/path.dart';
+import 'package:uuid/uuid.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo SQL',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: MySqlPage(),
+    );
+  }
+}
 
 class MySqlPage extends StatefulWidget {
   @override
@@ -10,19 +30,19 @@ class MySqlPage extends StatefulWidget {
 }
 
 class _MySqlPageState extends State<MySqlPage> {
-  List<PostData> _postList = [];
-
+  List<Memo> _memoList = [];
   final myController = TextEditingController();
   final upDateController = TextEditingController();
   var _selectedvalue;
 
   Future<void> initializeDemo() async {
-    _postList = await PostData.getMemos();
+    _memoList = await Memo.getMemos();
   }
 
   @override
   void dispose() {
     myController.dispose();
+    super.dispose();
   }
 
   @override
@@ -43,25 +63,24 @@ class _MySqlPageState extends State<MySqlPage> {
               );
             }
             return ListView.builder(
-              itemCount: _postList.length,
+              itemCount: _memoList.length,
               itemBuilder: (context, index) {
                 return Card(
                   child: ListTile(
-                    //   leading: Text(
-                    //   'ID ${_postList[index].id}',
-                    //     style: TextStyle(fontWeight: FontWeight.bold),
-                    //   ),
-                    title: Text('${_postList[index].food}'),
+                    leading: Text(
+                      'ID ${_memoList[index].id}',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    title: Text('${_memoList[index].text}'),
                     trailing: SizedBox(
                       width: 76,
                       height: 25,
                       child: RaisedButton.icon(
                         onPressed: () async {
-                          // await PostData.deleteMemo(_postList[index].id);
-                          final List<PostData> memos =
-                              await PostData.getMemos();
+                          await Memo.deleteMemo(_memoList[index].id);
+                          final List<Memo> memos = await Memo.getMemos();
                           setState(() {
-                            _postList = memos;
+                            _memoList = memos;
                           });
                         },
                         icon: Icon(
@@ -103,16 +122,13 @@ class _MySqlPageState extends State<MySqlPage> {
                             RaisedButton(
                               child: Text('保存'),
                               onPressed: () async {
-
-                                PostData _postList = PostData(food: myController.text, id: Database.id;);
-                                await PostData.insertMemo(_postList);
-                                final List<PostData> memos = await PostData.getMemos();
-
-                                // await PostData.insertMemo(_postList);
-                                // final List<PostData> memos =
-                                //     await PostData.getMemos();
+                                Memo _memo = Memo(
+                                    text: myController.text,
+                                    id: Uuid().hashCode);
+                                await Memo.insertMemo(_memo);
+                                final List<Memo> memos = await Memo.getMemos();
                                 setState(() {
-                                  _postList = memos as PostData;
+                                  _memoList = memos;
                                   _selectedvalue = null;
                                 });
                                 myController.clear();
@@ -153,7 +169,7 @@ class _MySqlPageState extends State<MySqlPage> {
                                             print(newValue);
                                           });
                                         },
-                                        items: _postList.map((entry) {
+                                        items: _memoList.map((entry) {
                                           return DropdownMenuItem(
                                               value: entry.id,
                                               child: Text(entry.id.toString()));
@@ -170,14 +186,14 @@ class _MySqlPageState extends State<MySqlPage> {
                                 RaisedButton(
                                   child: Text('更新'),
                                   onPressed: () async {
-                                    PostData updateMemo = PostData(
+                                    Memo updateMemo = Memo(
                                         id: _selectedvalue,
-                                        food: upDateController.text);
-                                    await PostData.updateMemo(updateMemo);
-                                    final List<PostData> memos =
-                                        await PostData.getMemos();
+                                        text: upDateController.text);
+                                    await Memo.updateMemo(updateMemo);
+                                    final List<Memo> memos =
+                                        await Memo.getMemos();
                                     super.setState(() {
-                                      _postList = memos;
+                                      _memoList = memos;
                                     });
                                     upDateController.clear();
                                     Navigator.pop(context);

@@ -1,63 +1,30 @@
-import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class PostData {
-  late final String food;
-  // late final String sentence;
-  late final int id;
-  // late final int eatTimeStamp;
-  // late final int postTimeStamp;
-  // late final int updateTimeStamp;
+class Memo {
+  final int id;
+  final String text;
 
-  PostData({
-    required this.food,
-    // required this.sentence,
-    required this.id,
-    // required this.eatTimeStamp,
-    // required this.postTimeStamp,
-    // required this.updateTimeStamp
-  });
+  Memo({required this.id, required this.text});
 
   Map<String, dynamic> toMap() {
     return {
-      'food': food,
-      // 'sentence': sentence,
-      "id": id,
-      // 'eatTimeStamp': eatTimeStamp,
-      // "postTimeStamp": postTimeStamp,
-      // "updateTimeStamp": updateTimeStamp
+      'id': id,
+      'text': text,
     };
   }
 
   @override
   String toString() {
-    return 'PostData{food: $food,}';
-    //'sentence: $sentence,id: $id,eatTimeStamp: $eatTimeStamp,postTimeStamp: $postTimeStamp,updateTimeStamp: $updateTimeStamp
+    return 'Memo{id: $id, text: $text}';
   }
 
-  static Future<List<PostData>> getMemos() async {
-    final Database db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('postData');
-    return List.generate(maps.length, (i) {
-      return PostData(
-        food: maps[i]['food'],
-        // sentence: maps[i]['sentence'],
-        id: maps[i]['id'],
-        // eatTimeStamp: maps[i]['eatTimeStamp'],
-        // postTimeStamp: maps[i]['postTimeStamp'],
-        // updateTimeStamp: maps[i]['updateTimeStamp'],
-      );
-    });
-  }
-
-//データベースの作成
   static Future<Database> get database async {
     final Future<Database> _database = openDatabase(
-      join(await getDatabasesPath(), 'postData.db'),
+      join(await getDatabasesPath(), 'memo_database.db'),
       onCreate: (db, version) {
         return db.execute(
-          "CREATE TABLE postData(food TEXT, id INTEGER PRIMARY KEY AUTOINCREMENT)",
+          "CREATE TABLE memo(id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT)",
         );
       },
       version: 1,
@@ -65,33 +32,41 @@ class PostData {
     return _database;
   }
 
-  //データの作成(insert)
-  static Future<void> insertMemo(PostData postData) async {
+  static Future<void> insertMemo(Memo memo) async {
     final Database db = await database;
     await db.insert(
-      'postData',
-      postData.toMap(),
+      'memo',
+      memo.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
-  //更新
-  static Future<void> updateMemo(PostData postData) async {
+  static Future<List<Memo>> getMemos() async {
+    final Database db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('memo');
+    return List.generate(maps.length, (i) {
+      return Memo(
+        id: maps[i]['id'],
+        text: maps[i]['text'],
+      );
+    });
+  }
+
+  static Future<void> updateMemo(Memo memo) async {
     final db = await database;
     await db.update(
-      'postData',
-      postData.toMap(),
+      'memo',
+      memo.toMap(),
       where: "id = ?",
-      whereArgs: [postData.id],
+      whereArgs: [memo.id],
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
   }
 
-  //削除
   static Future<void> deleteMemo(int id) async {
     final db = await database;
     await db.delete(
-      'postData',
+      'memo',
       where: "id = ?",
       whereArgs: [id],
     );
