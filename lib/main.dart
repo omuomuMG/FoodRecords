@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/all.dart';
+import 'package:food_records/add.dart';
 import 'BottomNavigationBar.dart';
 
 void main() {
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Riverpod Sample',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: BottomNavigationBarView(),
+      home: MySqlPage(),
     );
   }
 }

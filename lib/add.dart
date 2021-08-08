@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_records/sqlLite.dart';
-import 'package:sqflite/sqflite.dart';
 import 'dart:async';
-import 'package:path/path.dart';
 import 'package:uuid/uuid.dart';
 
 void main() {
@@ -66,36 +64,42 @@ class _MySqlPageState extends State<MySqlPage> {
               itemCount: _memoList.length,
               itemBuilder: (context, index) {
                 return Card(
-                  child: ListTile(
-                    leading: Text(
-                      'ID ${_memoList[index].id}',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    title: Text('${_memoList[index].text}'),
-                    trailing: SizedBox(
-                      width: 76,
-                      height: 25,
-                      child: RaisedButton.icon(
-                        onPressed: () async {
-                          await Memo.deleteMemo(_memoList[index].id);
-                          final List<Memo> memos = await Memo.getMemos();
-                          setState(() {
-                            _memoList = memos;
-                          });
-                        },
-                        icon: Icon(
-                          Icons.delete_forever,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                        label: Text(
-                          '削除',
-                          style: TextStyle(fontSize: 11),
-                        ),
-                        color: Colors.red,
-                        textColor: Colors.white,
-                      ),
-                    ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'ID ${_memoList[index].id}',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text('${_memoList[index].text}'),
+                          SizedBox(
+                            width: 76,
+                            height: 25,
+                            child: RaisedButton.icon(
+                              onPressed: () async {
+                                await Memo.deleteMemo(_memoList[index].id);
+                                final List<Memo> memos = await Memo.getMemos();
+                                setState(() {
+                                  _memoList = memos;
+                                });
+                              },
+                              icon: Icon(
+                                Icons.delete_forever,
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                              label: Text(
+                                '削除',
+                                style: TextStyle(fontSize: 11),
+                              ),
+                              color: Colors.red,
+                              textColor: Colors.white,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
                 );
               },
@@ -141,71 +145,71 @@ class _MySqlPageState extends State<MySqlPage> {
             },
           ),
           SizedBox(height: 20),
-          FloatingActionButton(
-              child: Icon(Icons.update),
-              backgroundColor: Colors.amberAccent,
-              onPressed: () async {
-                await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        content: StatefulBuilder(
-                          builder:
-                              (BuildContext context, StateSetter setState) {
-                            return Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Text('IDを選択して更新してね'),
-                                Row(
-                                  children: <Widget>[
-                                    Flexible(
-                                      flex: 1,
-                                      child: DropdownButton(
-                                        hint: Text("ID"),
-                                        value: _selectedvalue,
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            _selectedvalue = newValue;
-                                            print(newValue);
-                                          });
-                                        },
-                                        items: _memoList.map((entry) {
-                                          return DropdownMenuItem(
-                                              value: entry.id,
-                                              child: Text(entry.id.toString()));
-                                        }).toList(),
-                                      ),
-                                    ),
-                                    Flexible(
-                                      flex: 3,
-                                      child: TextField(
-                                          controller: upDateController),
-                                    ),
-                                  ],
-                                ),
-                                RaisedButton(
-                                  child: Text('更新'),
-                                  onPressed: () async {
-                                    Memo updateMemo = Memo(
-                                        id: _selectedvalue,
-                                        text: upDateController.text);
-                                    await Memo.updateMemo(updateMemo);
-                                    final List<Memo> memos =
-                                        await Memo.getMemos();
-                                    super.setState(() {
-                                      _memoList = memos;
-                                    });
-                                    upDateController.clear();
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      );
-                    });
-              }),
+          // FloatingActionButton(
+          //     child: Icon(Icons.update),
+          //     backgroundColor: Colors.amberAccent,
+          //     onPressed: () async {
+          //       await showDialog(
+          //           context: context,
+          //           builder: (BuildContext context) {
+          //             return AlertDialog(
+          //               content: StatefulBuilder(
+          //                 builder:
+          //                     (BuildContext context, StateSetter setState) {
+          //                   return Column(
+          //                     mainAxisSize: MainAxisSize.min,
+          //                     children: <Widget>[
+          //                       Text('IDを選択して更新してね'),
+          //                       Row(
+          //                         children: <Widget>[
+          //                           Flexible(
+          //                             flex: 1,
+          //                             child: DropdownButton(
+          //                               hint: Text("ID"),
+          //                               value: _selectedvalue,
+          //                               onChanged: (newValue) {
+          //                                 setState(() {
+          //                                   _selectedvalue = newValue;
+          //                                   print(newValue);
+          //                                 });
+          //                               },
+          //                               items: _memoList.map((entry) {
+          //                                 return DropdownMenuItem(
+          //                                     value: entry.id,
+          //                                     child: Text(entry.id.toString()));
+          //                               }).toList(),
+          //                             ),
+          //                           ),
+          //                           Flexible(
+          //                             flex: 3,
+          //                             child: TextField(
+          //                                 controller: upDateController),
+          //                           ),
+          //                         ],
+          //                       ),
+          //                       RaisedButton(
+          //                         child: Text('更新'),
+          //                         onPressed: () async {
+          //                           Memo updateMemo = Memo(
+          //                               id: _selectedvalue,
+          //                               text: upDateController.text);
+          //                           await Memo.updateMemo(updateMemo);
+          //                           final List<Memo> memos =
+          //                               await Memo.getMemos();
+          //                           super.setState(() {
+          //                             _memoList = memos;
+          //                           });
+          //                           upDateController.clear();
+          //                           Navigator.pop(context);
+          //                         },
+          //                       ),
+          //                     ],
+          //                   );
+          //                 },
+          //               ),
+          //             );
+          //           });
+          //     }),
         ],
       ),
     );
