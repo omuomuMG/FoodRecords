@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_records/AboutView.dart';
 import 'package:food_records/sqlLite.dart';
 import 'dart:async';
 import 'package:uuid/uuid.dart';
@@ -31,6 +32,7 @@ class _MySqlPageState extends State<MySqlPage> {
   List<Memo> _memoList = [];
   final myController = TextEditingController();
   final upDateController = TextEditingController();
+  final subDataController = TextEditingController();
   var _selectedvalue;
 
   Future<void> initializeDemo() async {
@@ -40,6 +42,7 @@ class _MySqlPageState extends State<MySqlPage> {
   @override
   void dispose() {
     myController.dispose();
+    subDataController.dispose();
     super.dispose();
   }
 
@@ -55,7 +58,6 @@ class _MySqlPageState extends State<MySqlPage> {
           future: initializeDemo(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              // 非同期処理未完了 = 通信中
               return Center(
                 child: CircularProgressIndicator(),
               );
@@ -67,38 +69,46 @@ class _MySqlPageState extends State<MySqlPage> {
                   child: Column(
                     children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             'ID ${_memoList[index].id}',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold),
                           ),
-                          Text('${_memoList[index].text}'),
-                          SizedBox(
-                            width: 76,
-                            height: 25,
-                            child: RaisedButton.icon(
-                              onPressed: () async {
-                                await Memo.deleteMemo(_memoList[index].id);
-                                final List<Memo> memos = await Memo.getMemos();
-                                setState(() {
-                                  _memoList = memos;
-                                });
-                              },
-                              icon: Icon(
-                                Icons.delete_forever,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                              label: Text(
-                                '削除',
-                                style: TextStyle(fontSize: 11),
-                              ),
-                              color: Colors.red,
-                              textColor: Colors.white,
+                          Container(
+                            child: Row(
+                              children: [
+                                RaisedButton(
+                                  // onPressed: () async {
+                                  //   await Memo.deleteMemo(_memoList[index].id);
+                                  //   final List<Memo> memos =
+                                  //       await Memo.getMemos();
+                                  //   setState(() {
+                                  //     _memoList = memos;
+                                  //   });
+                                  // },
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => AboutView()),
+                                    );
+                                  },
+                                  child: Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 20,
+                                  ),
+                                  shape: CircleBorder(),
+                                ),
+                              ],
                             ),
                           ),
                         ],
-                      )
+                      ),
+                      Text('${_memoList[index].text}'),
+                      Text("${_memoList[index].subtext}")
                     ],
                   ),
                 );
@@ -121,14 +131,17 @@ class _MySqlPageState extends State<MySqlPage> {
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Text('なんでも入力してね'),
+                            Text('料理名'),
                             TextField(controller: myController),
+                            Text('備考欄'),
+                            TextField(controller: subDataController),
                             RaisedButton(
                               child: Text('保存'),
                               onPressed: () async {
                                 Memo _memo = Memo(
                                     text: myController.text,
-                                    id: Uuid().hashCode);
+                                    id: Uuid().hashCode,
+                                    subtext: subDataController.text);
                                 await Memo.insertMemo(_memo);
                                 final List<Memo> memos = await Memo.getMemos();
                                 setState(() {
@@ -136,6 +149,7 @@ class _MySqlPageState extends State<MySqlPage> {
                                   _selectedvalue = null;
                                 });
                                 myController.clear();
+                                subDataController.clear();
                                 Navigator.pop(context);
                               },
                             ),

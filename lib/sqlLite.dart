@@ -4,30 +4,32 @@ import 'package:sqflite/sqflite.dart';
 class Memo {
   final int id;
   final String text;
+  final String subtext;
 
-  Memo({required this.id, required this.text});
+  Memo({required this.id, required this.text, required this.subtext});
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'text': text,
+      "subText": subtext,
     };
   }
 
   @override
   String toString() {
-    return 'Memo{id: $id, text: $text}';
+    return 'Memo{id: $id, text: $text, subtext: $subtext}';
   }
 
   static Future<Database> get database async {
     final Future<Database> _database = openDatabase(
-      join(await getDatabasesPath(), 'memo_database.db'),
+      join(await getDatabasesPath(), 'mem_database.db'),
       onCreate: (db, version) {
         return db.execute(
-          "CREATE TABLE memo(id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT)",
+          "CREATE TABLE memo(id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT, subtext TEXT)",
         );
       },
-      version: 1,
+      version: 2,
     );
     return _database;
   }
@@ -48,6 +50,7 @@ class Memo {
       return Memo(
         id: maps[i]['id'],
         text: maps[i]['text'],
+        subtext: maps[i]['subtext'],
       );
     });
   }

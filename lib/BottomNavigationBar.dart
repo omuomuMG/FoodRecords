@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+//import 'package:flutter/cupertino.dart';
+//import 'package:flutter/material.dart';
 //import 'package:food_records/FoodListView.dart';
-import 'package:food_records/add.dart';
+//import 'package:food_records/add.dart';
 //
 // class BottomNavigationBarView extends StatefulWidget {
 //   @override
