@@ -29,14 +29,14 @@ class MySqlPage extends StatefulWidget {
 }
 
 class _MySqlPageState extends State<MySqlPage> {
-  List<Memo> _memoList = [];
+  List<Memo> memoList = [];
   final myController = TextEditingController();
   final upDateController = TextEditingController();
   final subDataController = TextEditingController();
   var _selectedvalue;
 
   Future<void> initializeDemo() async {
-    _memoList = await Memo.getMemos();
+    memoList = await Memo.getMemos();
   }
 
   @override
@@ -53,7 +53,7 @@ class _MySqlPageState extends State<MySqlPage> {
         title: Text('メモアプリ'),
       ),
       body: Container(
-        padding: EdgeInsets.all(32),
+        padding: EdgeInsets.all(10),
         child: FutureBuilder(
           future: initializeDemo(),
           builder: (context, snapshot) {
@@ -63,24 +63,29 @@ class _MySqlPageState extends State<MySqlPage> {
               );
             }
             return ListView.builder(
-              itemCount: _memoList.length,
+              itemCount: memoList.length,
               itemBuilder: (context, index) {
                 return Card(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'ID ${_memoList[index].id}',
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Container(
-                            child: Row(
-                              children: [
-                                RaisedButton(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'ID ${memoList[index].id}',
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 2.0, right: 2),
+                              child: SizedBox(
+                                height: 20,
+                                child: ElevatedButton(
                                   // onPressed: () async {
                                   //   await Memo.deleteMemo(_memoList[index].id);
                                   //   final List<Memo> memos =
@@ -89,27 +94,39 @@ class _MySqlPageState extends State<MySqlPage> {
                                   //     _memoList = memos;
                                   //   });
                                   // },
+                                  child: const Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 15,
+                                  ),
+
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.blueGrey,
+                                    onPrimary: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
                                   onPressed: () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => AboutView()),
+                                          builder: (context) => AboutView(
+                                                memoList: memoList,
+                                                index: index,
+                                              )),
                                     );
                                   },
-                                  child: Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: 20,
-                                  ),
-                                  shape: CircleBorder(),
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Text('${_memoList[index].text}'),
-                      Text("${_memoList[index].subtext}")
-                    ],
+                          ],
+                        ),
+                        Text(
+                          '${memoList[index].text}',
+                        ),
+                        Text("${memoList[index].subtext}")
+                      ],
+                    ),
                   ),
                 );
               },
@@ -145,7 +162,7 @@ class _MySqlPageState extends State<MySqlPage> {
                                 await Memo.insertMemo(_memo);
                                 final List<Memo> memos = await Memo.getMemos();
                                 setState(() {
-                                  _memoList = memos;
+                                  memoList = memos;
                                   _selectedvalue = null;
                                 });
                                 myController.clear();

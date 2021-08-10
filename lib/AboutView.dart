@@ -1,46 +1,81 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:food_records/add.dart';
+import 'package:food_records/sqlLite.dart';
 
 class AboutView extends StatefulWidget {
+  final memoList;
+  final index;
+  AboutView({required this.memoList, required this.index});
   @override
-  _AboutViewState createState() => _AboutViewState();
+  AboutViewState createState() => AboutViewState();
 }
 
-class _AboutViewState extends State<AboutView> {
+class AboutViewState extends State<AboutView> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('ListView'),
-        ),
-        body: ListView(children: [
-          _menuItem("メニュー1", Icon(Icons.settings)),
-          _menuItem("メニュー2", Icon(Icons.map)),
-          _menuItem("メニュー3", Icon(Icons.room)),
-        ]),
-      ),
-    );
-  }
+    var memoList = widget.memoList;
+    final index = widget.index;
 
-  Widget _menuItem(String title, Icon icon) {
-    return Container(
-      decoration: new BoxDecoration(
-          border:
-              new Border(bottom: BorderSide(width: 1.0, color: Colors.grey))),
-      child: ListTile(
-        leading: icon,
-        title: Text(
-          title,
-          style: TextStyle(color: Colors.black, fontSize: 18.0),
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('List Test'),
         ),
-        onTap: () {
-          print("onTap called.");
-        }, // タップ
-        onLongPress: () {
-          print("onLongPress called.");
-        }, // 長押し
-      ),
-    );
+        body: ListView(
+          children: [
+            GestureDetector(
+              onTap: () async {
+                await Memo.deleteMemo(memoList[index].id);
+                final List<Memo> memos = await Memo.getMemos();
+                setState(() {
+                  memoList = memos;
+                });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MySqlPage()),
+                );
+              },
+              child: Card(
+                child: Container(
+                  height: 60,
+                  child: Row(
+                    children: [
+                      Text(
+                        "削除する",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
+        // body: ListView.builder(
+        //   itemBuilder: (BuildContext context, index) {
+        //     return GestureDetector(
+        //       onTap: () async {
+        //         await Memo.deleteMemo(memoList[index].id);
+        //         final List<Memo> memos = await Memo.getMemos();
+        //         setState(() {
+        //           memoList = memos;
+        //         });
+        //         Navigator.push(
+        //           context,
+        //           MaterialPageRoute(builder: (context) => MySqlPage()),
+        //         );
+        //       },
+        //       child: Card(
+        //           child: Row(
+        //         children: [
+        //           Icon(Icons.delete_forever),
+        //           Text('編集'),
+        //         ],
+        //       )),
+        //     );
+        //   },
+        //   itemCount: memoList.length,
+        // ),
+        );
   }
 }
