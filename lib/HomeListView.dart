@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:food_records/AboutView.dart';
 import 'package:food_records/sqlLite.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -36,6 +38,22 @@ class _MySqlPageState extends State<MySqlPage> {
   final upDateController = TextEditingController();
   final subDataController = TextEditingController();
   var selectedvalue;
+
+  // 選択した日時を格納する変数
+  var _mydatetime = new DateTime.now();
+
+  var formatter = new DateFormat('yyyy/MM/dd');
+
+  // DateTime _date = new DateFormat.yMMMd('ja').format(DateTime.now()).toString() as DateTime;
+
+  // Future<Null> _selectDate(BuildContext context) async {
+  //   final DateTime? picked = await showDatePicker(
+  //       context: context,
+  //       initialDate: _date,
+  //       firstDate: new DateTime(2016),
+  //       lastDate: new DateTime.now().add(new Duration(days: 360)));
+  //   if (picked != null) setState(() => _date = picked);
+  // }
 
   String getTodayDate() {
     initializeDateFormatting('ja');
@@ -139,7 +157,7 @@ class _MySqlPageState extends State<MySqlPage> {
                           color: Colors.grey,
                         ),
                         Text(
-                          "作成日 ${memoList[index].nowDate}",
+                          "作成日 ${memoList[index].createdDate}",
                           style: TextStyle(color: Colors.grey[600]),
                         ),
                       ],
@@ -169,6 +187,33 @@ class _MySqlPageState extends State<MySqlPage> {
                             TextField(controller: myController),
                             Text('備考欄'),
                             TextField(controller: subDataController),
+                            // Center(child: Text("${_date}")),
+                            // new RaisedButton(
+                            //   onPressed: () => _selectDate(context),
+                            //   child: new Text('日付選択'),
+                            // ),
+                            IconButton(
+                                onPressed: () {
+                                  DatePicker.showDatePicker(context,
+                                      showTitleActions: true,
+                                      onChanged: (date) {
+                                    print('change $date');
+                                  },
+                                      // onConfirm内の処理はDatepickerで選択完了後に呼び出される
+                                      onConfirm: (date) {
+                                    print("Done $date");
+                                    setState(() {
+                                      _mydatetime = date;
+                                    });
+                                  },
+                                      currentTime: DateTime.now(),
+                                      locale: LocaleType.jp);
+                                },
+                                icon: Icon(Icons.arrow_forward_ios)),
+                            Text(
+                              formatter.format(_mydatetime),
+                            ),
+                            Text("$_mydatetime"),
                             RaisedButton(
                               child: Text('保存'),
                               onPressed: () async {
@@ -176,8 +221,7 @@ class _MySqlPageState extends State<MySqlPage> {
                                   text: myController.text,
                                   id: Uuid().hashCode,
                                   subtext: subDataController.text,
-                                  nowDate: getTodayDate(),
-                                  //now: DateTime.now().toString(),
+                                  createdDate: getTodayDate(),
                                 );
                                 await Memo.insertMemo(_memo);
                                 final List<Memo> memos = await Memo.getMemos();
@@ -195,139 +239,7 @@ class _MySqlPageState extends State<MySqlPage> {
                       ));
             },
           ),
-          FloatingActionButton(
-              child: Icon(Icons.update),
-              backgroundColor: Colors.amberAccent,
-              onPressed: () async {
-                await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        content: StatefulBuilder(
-                          builder:
-                              (BuildContext context, StateSetter setState) {
-                            return Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Text('IDを選択して更新してね'),
-                                Row(
-                                  children: <Widget>[
-                                    Flexible(
-                                      flex: 1,
-                                      child: DropdownButton(
-                                        hint: Text("ID"),
-                                        value: selectedvalue,
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            selectedvalue = newValue;
-                                            print(newValue);
-                                          });
-                                        },
-                                        items: memoList.map((entry) {
-                                          return DropdownMenuItem(
-                                              value: entry.id,
-                                              child: Text(entry.id.toString()));
-                                        }).toList(),
-                                      ),
-                                    ),
-                                    Flexible(
-                                      flex: 3,
-                                      child: TextField(
-                                          controller: upDateController),
-                                    ),
-                                  ],
-                                ),
-                                RaisedButton(
-                                  child: Text('更新'),
-                                  onPressed: () async {
-                                    Memo updateMemo = Memo(
-                                        id: selectedvalue,
-                                        text: upDateController.text,
-                                        subtext: '',
-                                        nowDate: '');
-                                    await Memo.updateMemo(updateMemo);
-                                    final List<Memo> memos =
-                                        await Memo.getMemos();
-                                    super.setState(() {
-                                      memoList = memos;
-                                    });
-                                    upDateController.clear();
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      );
-                    });
-              }),
           SizedBox(height: 20),
-          // FloatingActionButton(
-          //     child: Icon(Icons.update),
-          //     backgroundColor: Colors.amberAccent,
-          //     onPressed: () async {
-          //       await showDialog(
-          //           context: context,
-          //           builder: (BuildContext context) {
-          //             return AlertDialog(
-          //               content: StatefulBuilder(
-          //                 builder:
-          //                     (BuildContext context, StateSetter setState) {
-          //                   return Column(
-          //                     mainAxisSize: MainAxisSize.min,
-          //                     children: <Widget>[
-          //                       Text('IDを選択して更新してね'),
-          //                       Row(
-          //                         children: <Widget>[
-          //                           Flexible(
-          //                             flex: 1,
-          //                             child: DropdownButton(
-          //                               hint: Text("ID"),
-          //                               value: _selectedvalue,
-          //                               onChanged: (newValue) {
-          //                                 setState(() {
-          //                                   _selectedvalue = newValue;
-          //                                   print(newValue);
-          //                                 });
-          //                               },
-          //                               items: _memoList.map((entry) {
-          //                                 return DropdownMenuItem(
-          //                                     value: entry.id,
-          //                                     child: Text(entry.id.toString()));
-          //                               }).toList(),
-          //                             ),
-          //                           ),
-          //                           Flexible(
-          //                             flex: 3,
-          //                             child: TextField(
-          //                                 controller: upDateController),
-          //                           ),
-          //                         ],
-          //                       ),
-          //                       RaisedButton(
-          //                         child: Text('更新'),
-          //                         onPressed: () async {
-          //                           Memo updateMemo = Memo(
-          //                               id: _selectedvalue,
-          //                               text: upDateController.text);
-          //                           await Memo.updateMemo(updateMemo);
-          //                           final List<Memo> memos =
-          //                               await Memo.getMemos();
-          //                           super.setState(() {
-          //                             _memoList = memos;
-          //                           });
-          //                           upDateController.clear();
-          //                           Navigator.pop(context);
-          //                         },
-          //                       ),
-          //                     ],
-          //                   );
-          //                 },
-          //               ),
-          //             );
-          //           });
-          //     }),
         ],
       ),
     );
