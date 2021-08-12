@@ -5,28 +5,28 @@ class Memo {
   final int id;
   final String text;
   final String subtext;
-
-  Memo({required this.id, required this.text, required this.subtext});
+  final String nowDate;
+  Memo(
+      {required this.id,
+      required this.text,
+      required this.subtext,
+      required this.nowDate});
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'text': text,
-      "subText": subtext,
-    };
+    return {'id': id, 'text': text, "subText": subtext, "nowDate": nowDate};
   }
 
   @override
   String toString() {
-    return 'Memo{id: $id, text: $text, subtext: $subtext}';
+    return 'Memo{id: $id, text: $text, subtext: $subtext, nowDate: $nowDate}';
   }
 
   static Future<Database> get database async {
     final Future<Database> _database = openDatabase(
-      join(await getDatabasesPath(), 'mem_database.db'),
+      join(await getDatabasesPath(), 'memo_database1.db'),
       onCreate: (db, version) {
         return db.execute(
-          "CREATE TABLE memo(id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT, subtext TEXT)",
+          "CREATE TABLE memo(id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT, subtext TEXT, nowDate TEXT)",
         );
       },
       version: 2,
@@ -48,10 +48,10 @@ class Memo {
     final List<Map<String, dynamic>> maps = await db.query('memo');
     return List.generate(maps.length, (i) {
       return Memo(
-        id: maps[i]['id'],
-        text: maps[i]['text'],
-        subtext: maps[i]['subtext'],
-      );
+          id: maps[i]['id'],
+          text: maps[i]['text'],
+          subtext: maps[i]['subtext'],
+          nowDate: maps[i]['nowDate']);
     });
   }
 

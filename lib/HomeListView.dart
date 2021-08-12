@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:food_records/AboutView.dart';
 import 'package:food_records/sqlLite.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'dart:async';
 import 'package:uuid/uuid.dart';
 
@@ -33,7 +35,12 @@ class _MySqlPageState extends State<MySqlPage> {
   final myController = TextEditingController();
   final upDateController = TextEditingController();
   final subDataController = TextEditingController();
-  var _selectedvalue;
+  var selectedvalue;
+
+  String getTodayDate() {
+    initializeDateFormatting('ja');
+    return DateFormat.yMMMd('ja').format(DateTime.now()).toString();
+  }
 
   Future<void> initializeDemo() async {
     memoList = await Memo.getMemos();
@@ -113,6 +120,8 @@ class _MySqlPageState extends State<MySqlPage> {
                                           builder: (context) => AboutView(
                                                 memoList: memoList,
                                                 index: index,
+                                                selectedvalue:
+                                                    memoList[index].id,
                                               )),
                                     );
                                   },
@@ -124,7 +133,15 @@ class _MySqlPageState extends State<MySqlPage> {
                         Text(
                           '${memoList[index].text}',
                         ),
-                        Text("${memoList[index].subtext}")
+                        Text("${memoList[index].subtext}"),
+                        Divider(
+                          height: 1,
+                          color: Colors.grey,
+                        ),
+                        Text(
+                          "作成日 ${memoList[index].nowDate}",
+                          style: TextStyle(color: Colors.grey[600]),
+                        ),
                       ],
                     ),
                   ),
@@ -156,14 +173,17 @@ class _MySqlPageState extends State<MySqlPage> {
                               child: Text('保存'),
                               onPressed: () async {
                                 Memo _memo = Memo(
-                                    text: myController.text,
-                                    id: Uuid().hashCode,
-                                    subtext: subDataController.text);
+                                  text: myController.text,
+                                  id: Uuid().hashCode,
+                                  subtext: subDataController.text,
+                                  nowDate: getTodayDate(),
+                                  //now: DateTime.now().toString(),
+                                );
                                 await Memo.insertMemo(_memo);
                                 final List<Memo> memos = await Memo.getMemos();
                                 setState(() {
                                   memoList = memos;
-                                  _selectedvalue = null;
+                                  selectedvalue = selectedvalue;
                                 });
                                 myController.clear();
                                 subDataController.clear();
@@ -175,6 +195,73 @@ class _MySqlPageState extends State<MySqlPage> {
                       ));
             },
           ),
+          FloatingActionButton(
+              child: Icon(Icons.update),
+              backgroundColor: Colors.amberAccent,
+              onPressed: () async {
+                await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        content: StatefulBuilder(
+                          builder:
+                              (BuildContext context, StateSetter setState) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text('IDを選択して更新してね'),
+                                Row(
+                                  children: <Widget>[
+                                    Flexible(
+                                      flex: 1,
+                                      child: DropdownButton(
+                                        hint: Text("ID"),
+                                        value: selectedvalue,
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            selectedvalue = newValue;
+                                            print(newValue);
+                                          });
+                                        },
+                                        items: memoList.map((entry) {
+                                          return DropdownMenuItem(
+                                              value: entry.id,
+                                              child: Text(entry.id.toString()));
+                                        }).toList(),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      flex: 3,
+                                      child: TextField(
+                                          controller: upDateController),
+                                    ),
+                                  ],
+                                ),
+                                RaisedButton(
+                                  child: Text('更新'),
+                                  onPressed: () async {
+                                    Memo updateMemo = Memo(
+                                        id: selectedvalue,
+                                        text: upDateController.text,
+                                        subtext: '',
+                                        nowDate: '');
+                                    await Memo.updateMemo(updateMemo);
+                                    final List<Memo> memos =
+                                        await Memo.getMemos();
+                                    super.setState(() {
+                                      memoList = memos;
+                                    });
+                                    upDateController.clear();
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      );
+                    });
+              }),
           SizedBox(height: 20),
           // FloatingActionButton(
           //     child: Icon(Icons.update),

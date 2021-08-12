@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/all.dart';
-import 'package:food_records/add.dart';
-import 'BottomNavigationBar.dart';
+import 'package:food_records/HomeListView.dart';
 
 void main() {
   runApp(
-    ProviderScope(
-      child: MyApp(),
-    ),
+    MyApp(),
   );
 }
 
