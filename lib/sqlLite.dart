@@ -6,32 +6,35 @@ class Memo {
   final String text;
   final String subtext;
   final String createdDate;
+  final String eatDate;
   Memo(
       {required this.id,
       required this.text,
       required this.subtext,
-      required this.createdDate});
+      required this.createdDate,
+      required this.eatDate});
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'text': text,
       "subText": subtext,
-      "createdDate": createdDate
+      "createdDate": createdDate,
+      "eatDate": eatDate,
     };
   }
 
   @override
   String toString() {
-    return 'Memo{id: $id, text: $text, subtext: $subtext, createdDate: $createdDate}';
+    return 'Memo{id: $id, text: $text, subtext: $subtext, createdDate: $createdDate, eatDate: $eatDate}';
   }
 
   static Future<Database> get database async {
     final Future<Database> _database = openDatabase(
-      join(await getDatabasesPath(), 'memo_database3.db'),
+      join(await getDatabasesPath(), 'memo_database4.db'),
       onCreate: (db, version) {
         return db.execute(
-          "CREATE TABLE memo(id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT, subtext TEXT, createdDate TEXT)",
+          "CREATE TABLE memo(id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT, subtext TEXT, createdDate TEXT, eatDate TEXT)",
         );
       },
       version: 2,
@@ -56,7 +59,8 @@ class Memo {
           id: maps[i]['id'],
           text: maps[i]['text'],
           subtext: maps[i]['subtext'],
-          createdDate: maps[i]['createdDate']);
+          createdDate: maps[i]['createdDate'],
+          eatDate: maps[i]['eatDate']);
     });
   }
 

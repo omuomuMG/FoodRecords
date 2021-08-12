@@ -23,8 +23,6 @@ class AboutViewState extends State<AboutView> {
     var selectedvalue = widget.selectedvalue;
     final upDateController = TextEditingController();
 
-    final memoListId = memoList[index].id;
-
     return Scaffold(
         appBar: AppBar(
           title: Text('List Test'),
@@ -59,7 +57,8 @@ class AboutViewState extends State<AboutView> {
                                         text: upDateController.text,
                                         subtext: '',
                                         createdDate:
-                                            memoList[index].createdDate);
+                                            memoList[index].createdDate,
+                                        eatDate: '');
                                     await Memo.updateMemo(updateMemo);
                                     final List<Memo> memos =
                                         await Memo.getMemos();

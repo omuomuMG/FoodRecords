@@ -111,19 +111,10 @@ class _MySqlPageState extends State<MySqlPage> {
                               child: SizedBox(
                                 height: 20,
                                 child: ElevatedButton(
-                                  // onPressed: () async {
-                                  //   await Memo.deleteMemo(_memoList[index].id);
-                                  //   final List<Memo> memos =
-                                  //       await Memo.getMemos();
-                                  //   setState(() {
-                                  //     _memoList = memos;
-                                  //   });
-                                  // },
                                   child: const Icon(
                                     Icons.arrow_forward_ios,
                                     size: 15,
                                   ),
-
                                   style: ElevatedButton.styleFrom(
                                     primary: Colors.blueGrey,
                                     onPrimary: Colors.white,
@@ -156,10 +147,14 @@ class _MySqlPageState extends State<MySqlPage> {
                           height: 1,
                           color: Colors.grey,
                         ),
-                        Text(
-                          "作成日 ${memoList[index].createdDate}",
-                          style: TextStyle(color: Colors.grey[600]),
-                        ),
+                        // Text(
+                        //   "作成日 ${memoList[index].createdDate}",
+                        //   style: TextStyle(color: Colors.grey[600]),
+                        // ),
+                        Text("食べた日: ${memoList[index].eatDate}",
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                            )),
                       ],
                     ),
                   ),
@@ -222,6 +217,7 @@ class _MySqlPageState extends State<MySqlPage> {
                                   id: Uuid().hashCode,
                                   subtext: subDataController.text,
                                   createdDate: getTodayDate(),
+                                  eatDate: formatter.format(_mydatetime),
                                 );
                                 await Memo.insertMemo(_memo);
                                 final List<Memo> memos = await Memo.getMemos();

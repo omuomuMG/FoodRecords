@@ -62,7 +62,8 @@ class _EditViewState extends State<EditView> {
                                         id: selectedvalue,
                                         text: upDateController.text,
                                         subtext: '',
-                                        createdDate: '');
+                                        createdDate: '',
+                                        eatDate: '');
                                     await Memo.updateMemo(updateMemo);
                                     final List<Memo> memos =
                                         await Memo.getMemos();
