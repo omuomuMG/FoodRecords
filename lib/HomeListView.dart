@@ -35,25 +35,16 @@ class MySqlPage extends StatefulWidget {
 class _MySqlPageState extends State<MySqlPage> {
   List<Memo> memoList = [];
   final myController = TextEditingController();
-  final upDateController = TextEditingController();
   final subDataController = TextEditingController();
+  final upDateController = TextEditingController();
+  final upDateSubController = TextEditingController();
+
   var selectedvalue;
 
   // 選択した日時を格納する変数
   var _mydatetime = new DateTime.now();
 
   var formatter = new DateFormat('yyyy/MM/dd');
-
-  // DateTime _date = new DateFormat.yMMMd('ja').format(DateTime.now()).toString() as DateTime;
-
-  // Future<Null> _selectDate(BuildContext context) async {
-  //   final DateTime? picked = await showDatePicker(
-  //       context: context,
-  //       initialDate: _date,
-  //       firstDate: new DateTime(2016),
-  //       lastDate: new DateTime.now().add(new Duration(days: 360)));
-  //   if (picked != null) setState(() => _date = picked);
-  // }
 
   String getTodayDate() {
     initializeDateFormatting('ja');
@@ -70,6 +61,8 @@ class _MySqlPageState extends State<MySqlPage> {
     subDataController.dispose();
     super.dispose();
   }
+
+  bool dateDone = false;
 
   @override
   Widget build(BuildContext context) {
@@ -131,6 +124,9 @@ class _MySqlPageState extends State<MySqlPage> {
                                                 index: index,
                                                 selectedvalue:
                                                     memoList[index].id,
+                                                myController: myController.text,
+                                                subDataController:
+                                                    subDataController.text,
                                               )),
                                     );
                                   },
@@ -173,66 +169,83 @@ class _MySqlPageState extends State<MySqlPage> {
             onPressed: () {
               showDialog(
                   context: context,
-                  builder: (_) => AlertDialog(
-                        title: Text("新規メモ作成"),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text('料理名'),
-                            TextField(controller: myController),
-                            Text('備考欄'),
-                            TextField(controller: subDataController),
-                            // Center(child: Text("${_date}")),
-                            // new RaisedButton(
-                            //   onPressed: () => _selectDate(context),
-                            //   child: new Text('日付選択'),
-                            // ),
-                            IconButton(
-                                onPressed: () {
-                                  DatePicker.showDatePicker(context,
-                                      showTitleActions: true,
-                                      onChanged: (date) {
-                                    print('change $date');
-                                  },
-                                      // onConfirm内の処理はDatepickerで選択完了後に呼び出される
-                                      onConfirm: (date) {
-                                    print("Done $date");
-                                    setState(() {
-                                      _mydatetime = date;
-                                    });
-                                  },
-                                      currentTime: DateTime.now(),
-                                      locale: LocaleType.jp);
+                  builder: (_) => StatefulBuilder(builder: (context, setState) {
+                        return AlertDialog(
+                          title: Text("新規メモ作成"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text('料理名'),
+                              TextField(controller: myController),
+                              Text('備考欄'),
+                              TextField(controller: subDataController),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      DatePicker.showDatePicker(context,
+                                          showTitleActions: true,
+                                          onChanged: (date) {
+                                        print('change $date');
+                                      },
+                                          // onConfirm内の処理はDatepickerで選択完了後に呼び出される
+                                          onConfirm: (date) {
+                                        print("Done $date");
+                                        setState(() {
+                                          _mydatetime = date;
+                                          dateDone = true;
+                                        });
+                                      },
+                                          currentTime: DateTime.now(),
+                                          locale: LocaleType.jp);
+                                    },
+                                    icon: Icon(
+                                      Icons.calendar_today,
+                                      color: Colors.redAccent,
+                                    ),
+                                  ),
+                                  dateDone
+                                      ? Text(
+                                          formatter.format(_mydatetime),
+                                        )
+                                      : Text(
+                                          "食べた日を入力する",
+                                          style: TextStyle(
+                                              color: Colors.grey[800]),
+                                        ),
+                                ],
+                              ),
+                              // Text(
+                              //   formatter.format(_mydatetime),
+                              // ),
+                              RaisedButton(
+                                child: Text('保存'),
+                                onPressed: () async {
+                                  Memo _memo = Memo(
+                                    text: myController.text,
+                                    id: Uuid().hashCode,
+                                    subtext: subDataController.text,
+                                    createdDate: getTodayDate(),
+                                    eatDate: formatter.format(_mydatetime),
+                                    updateDate: "未編集",
+                                  );
+                                  await Memo.insertMemo(_memo);
+                                  final List<Memo> memos =
+                                      await Memo.getMemos();
+                                  setState(() {
+                                    memoList = memos;
+                                    selectedvalue = selectedvalue;
+                                  });
+
+                                  myController.clear();
+                                  subDataController.clear();
+                                  Navigator.pop(context);
                                 },
-                                icon: Icon(Icons.arrow_forward_ios)),
-                            Text(
-                              formatter.format(_mydatetime),
-                            ),
-                            Text("$_mydatetime"),
-                            RaisedButton(
-                              child: Text('保存'),
-                              onPressed: () async {
-                                Memo _memo = Memo(
-                                  text: myController.text,
-                                  id: Uuid().hashCode,
-                                  subtext: subDataController.text,
-                                  createdDate: getTodayDate(),
-                                  eatDate: formatter.format(_mydatetime),
-                                );
-                                await Memo.insertMemo(_memo);
-                                final List<Memo> memos = await Memo.getMemos();
-                                setState(() {
-                                  memoList = memos;
-                                  selectedvalue = selectedvalue;
-                                });
-                                myController.clear();
-                                subDataController.clear();
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
-                        ),
-                      ));
+                              ),
+                            ],
+                          ),
+                        );
+                      }));
             },
           ),
           SizedBox(height: 20),
