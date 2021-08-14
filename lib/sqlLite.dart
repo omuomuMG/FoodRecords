@@ -7,14 +7,16 @@ class Memo {
   final String subtext;
   final String createdDate;
   final String eatDate;
-  final updateDate;
-  Memo(
-      {required this.id,
-      required this.text,
-      required this.subtext,
-      required this.createdDate,
-      required this.eatDate,
-      this.updateDate});
+  // final updateDate;
+
+  Memo({
+    required this.id,
+    required this.text,
+    required this.subtext,
+    required this.createdDate,
+    required this.eatDate,
+    // this.updateDate
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -23,13 +25,13 @@ class Memo {
       "subText": subtext,
       "createdDate": createdDate,
       "eatDate": eatDate,
-      "updateDate": updateDate,
+      //"updateDate": updateDate
     };
   }
 
   @override
   String toString() {
-    return 'Memo{id: $id, text: $text, subtext: $subtext, createdDate: $createdDate, eatDate: $eatDate, updateDate: $updateDate}';
+    return 'Memo{id: $id, text: $text, subtext: $subtext, createdDate: $createdDate, eatDate: $eatDate}';
   }
 
   static Future<Database> get database async {
@@ -37,7 +39,7 @@ class Memo {
       join(await getDatabasesPath(), 'memo_database10.db'),
       onCreate: (db, version) {
         return db.execute(
-          "CREATE TABLE memo(id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT, subtext TEXT, createdDate TEXT, eatDate TEXT, updateDate TEXT)",
+          "CREATE TABLE memo(id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT, subtext TEXT, createdDate TEXT, eatDate TEXT)",
         );
       },
       version: 2,
@@ -63,8 +65,7 @@ class Memo {
           text: maps[i]['text'],
           subtext: maps[i]['subtext'],
           createdDate: maps[i]['createdDate'],
-          eatDate: maps[i]['eatDate'],
-          updateDate: maps[i]['updateDate']);
+          eatDate: maps[i]['eatDate']);
     });
   }
 
