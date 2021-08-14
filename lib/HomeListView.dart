@@ -124,9 +124,9 @@ class _MySqlPageState extends State<MySqlPage> {
                                                 index: index,
                                                 selectedvalue:
                                                     memoList[index].id,
-                                                myController: myController.text,
-                                                subDataController:
-                                                    subDataController.text,
+                                                // myController: myController.text,
+                                                // subDataController:
+                                                //     subDataController.text,
                                               )),
                                     );
                                   },
@@ -240,6 +240,11 @@ class _MySqlPageState extends State<MySqlPage> {
                                   myController.clear();
                                   subDataController.clear();
                                   Navigator.pop(context);
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //       builder: (context) => MySqlPage()),
+                                  // );
                                 },
                               ),
                             ],

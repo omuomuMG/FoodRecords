@@ -6,17 +6,18 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 class AboutView extends StatefulWidget {
-  final myController;
-  final subDataController;
+  //final myController;
+  //final subDataController;
   final memoList;
   final index;
   final selectedvalue;
-  AboutView(
-      {required this.memoList,
-      required this.index,
-      required this.selectedvalue,
-      this.subDataController,
-      this.myController});
+  AboutView({
+    required this.memoList,
+    required this.index,
+    required this.selectedvalue,
+    //this.subDataController,
+    //this.myController
+  });
   @override
   AboutViewState createState() => AboutViewState();
 }
@@ -29,8 +30,8 @@ class AboutViewState extends State<AboutView> {
       return DateFormat.yMMMd('ja').format(DateTime.now()).toString();
     }
 
-    final myController = widget.myController;
-    final subDataController = widget.subDataController;
+    // final myController = widget.myController;
+    // final subDataController = widget.subDataController;
 
     var memoList = widget.memoList;
     final index = widget.index;
@@ -77,37 +78,6 @@ class AboutViewState extends State<AboutView> {
                                     createdDate: memoList[index].createdDate,
                                     eatDate: memoList[index].eatDate,
                                     updateDate: getUpdateDate());
-
-                                // if (upDateController.text.isEmpty) {
-                                //   Memo updateMemo = Memo(
-                                //       id: selectedvalue,
-                                //       text: myController.text,
-                                //       subtext: upDateSubController.text,
-                                //       createdDate: memoList[index].createdDate,
-                                //       eatDate: memoList[index].eatDate,
-                                //       updateDate: getUpdateDate());
-                                //
-                                //   if (upDateSubController.text.isEmpty) {
-                                //     Memo updateMemo = Memo(
-                                //         id: selectedvalue,
-                                //         text: upDateController.text,
-                                //         subtext: subDataController.text,
-                                //         createdDate:
-                                //             memoList[index].createdDate,
-                                //         eatDate: memoList[index].eatDate,
-                                //         updateDate: getUpdateDate());
-                                //   }
-                                // }
-                                // if (upDateSubController.text.isEmpty) {
-                                //   Memo updateMemo = Memo(
-                                //       id: selectedvalue,
-                                //       text: upDateController.text,
-                                //       subtext: subDataController.text,
-                                //       createdDate: memoList[index].createdDate,
-                                //       eatDate: memoList[index].eatDate,
-                                //       updateDate: getUpdateDate());
-                                // }
-
                                 await Memo.updateMemo(updateMemo);
                                 final List<Memo> memos = await Memo.getMemos();
                                 super.setState(() {

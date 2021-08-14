@@ -34,7 +34,7 @@ class Memo {
 
   static Future<Database> get database async {
     final Future<Database> _database = openDatabase(
-      join(await getDatabasesPath(), 'memo_database5.db'),
+      join(await getDatabasesPath(), 'memo_database10.db'),
       onCreate: (db, version) {
         return db.execute(
           "CREATE TABLE memo(id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT, subtext TEXT, createdDate TEXT, eatDate TEXT, updateDate TEXT)",
