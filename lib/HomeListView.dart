@@ -69,6 +69,7 @@ class _MySqlPageState extends State<MySqlPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('メモアプリ'),
+        backgroundColor: Colors.white,
       ),
       body: Container(
         padding: EdgeInsets.all(10),
@@ -135,15 +136,18 @@ class _MySqlPageState extends State<MySqlPage> {
                             ),
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 3),
-                          child: Text(
-                            '${memoList[index].text}',
-                          ),
+
+                        Text(
+                          '${memoList[index].text}',
+                          style: TextStyle(fontSize: 16),
                         ),
+
                         Padding(
                           padding: const EdgeInsets.only(bottom: 6.0),
-                          child: Text("${memoList[index].subtext}"),
+                          child: Text(
+                            "${memoList[index].subtext}",
+                            style: TextStyle(),
+                          ),
                         ),
                         Divider(
                           height: 1,
@@ -176,11 +180,16 @@ class _MySqlPageState extends State<MySqlPage> {
               showDialog(
                   context: context,
                   builder: (_) => AlertDialog(
-                        title: Text("新規メモ作成"),
+                        title: Text("記録する"),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Text('料理名'),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 6.0),
+                              child: Text(
+                                '料理名',
+                              ),
+                            ),
                             TextField(
                               decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
@@ -194,7 +203,8 @@ class _MySqlPageState extends State<MySqlPage> {
                               minLines: 3,
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, bottom: 6.0),
                               child: Text(
                                 '備考欄',
                               ),
