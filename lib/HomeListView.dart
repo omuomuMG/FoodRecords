@@ -68,7 +68,10 @@ class _MySqlPageState extends State<MySqlPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('メモアプリ'),
+        title: Text(
+          '毎日のご飯記録',
+          style: TextStyle(color: Colors.black),
+        ),
         backgroundColor: Colors.white,
       ),
       body: Container(
@@ -125,9 +128,6 @@ class _MySqlPageState extends State<MySqlPage> {
                                                 index: index,
                                                 selectedvalue:
                                                     memoList[index].id,
-                                                // myController: myController.text,
-                                                // subDataController:
-                                                //     subDataController.text,
                                               )),
                                     );
                                   },
@@ -175,6 +175,7 @@ class _MySqlPageState extends State<MySqlPage> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           FloatingActionButton(
+            backgroundColor: Colors.blueGrey[900],
             child: Icon(Icons.add),
             onPressed: () {
               showDialog(
@@ -226,9 +227,7 @@ class _MySqlPageState extends State<MySqlPage> {
                                 DatePicker.showDatePicker(context,
                                     showTitleActions: true, onChanged: (date) {
                                   print('change $date');
-                                },
-                                    // onConfirm内の処理はDatepickerで選択完了後に呼び出される
-                                    onConfirm: (date) {
+                                }, onConfirm: (date) {
                                   print("Done $date");
                                   setState(() {
                                     _mydatetime = date;

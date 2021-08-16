@@ -57,15 +57,17 @@ class AboutViewState extends State<AboutView> {
                             Container(
                               child: Flexible(
                                 flex: 3,
-                                child: TextField(controller: upDateController),
-                              ),
-                            ),
-                            Text('備考欄'),
-                            Container(
-                              child: Flexible(
-                                flex: 3,
-                                child:
-                                    TextField(controller: upDateSubController),
+                                child: TextField(
+                                    decoration: InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                    ),
+                                    maxLines: 5,
+                                    minLines: 3,
+                                    controller: upDateController),
                               ),
                             ),
                             RaisedButton(
@@ -74,6 +76,88 @@ class AboutViewState extends State<AboutView> {
                                 Memo updateMemo = Memo(
                                     id: selectedvalue,
                                     text: upDateController.text,
+                                    subtext: memoList[index].subtext,
+                                    createdDate: memoList[index].createdDate,
+                                    eatDate: memoList[index].eatDate,
+                                    updateDate: getUpdateDate());
+                                await Memo.updateMemo(updateMemo);
+                                final List<Memo> memos = await Memo.getMemos();
+                                super.setState(() {
+                                  memoList = memos;
+                                });
+                                upDateController.clear();
+                                upDateSubController.clear();
+                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MySqlPage()),
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  );
+                });
+          },
+          child: Card(
+            color: Colors.blue,
+            child: Container(
+              height: 60,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.edit),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        "食べ物を編集する",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () async {
+            await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    content: StatefulBuilder(
+                      builder: (BuildContext context, StateSetter setState) {
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text('備考欄'),
+                            Container(
+                              child: Flexible(
+                                flex: 3,
+                                child: TextField(
+                                    decoration: InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                    ),
+                                    maxLines: 5,
+                                    minLines: 3,
+                                    controller: upDateSubController),
+                              ),
+                            ),
+                            RaisedButton(
+                              child: Text('更新'),
+                              onPressed: () async {
+                                Memo updateMemo = Memo(
+                                    id: selectedvalue,
+                                    text: memoList[index].text,
                                     subtext: upDateSubController.text,
                                     createdDate: memoList[index].createdDate,
                                     eatDate: memoList[index].eatDate,
@@ -101,6 +185,7 @@ class AboutViewState extends State<AboutView> {
                 });
           },
           child: Card(
+            color: Colors.blue,
             child: Container(
               height: 60,
               child: Padding(
@@ -111,7 +196,7 @@ class AboutViewState extends State<AboutView> {
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
-                        "編集する",
+                        "備考欄を編集する",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -134,6 +219,7 @@ class AboutViewState extends State<AboutView> {
             );
           },
           child: Card(
+            color: Colors.redAccent,
             child: Container(
               height: 60,
               child: Padding(
