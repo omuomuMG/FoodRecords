@@ -121,7 +121,7 @@ class _MySqlPageState extends State<MySqlPage> {
                                           builder: (context) => AboutView(
                                                 memoList: memoList,
                                                 index: index,
-                                                selectedvalue:
+                                                selectedValue:
                                                     memoList[index].id,
                                               )),
                                     );
@@ -221,7 +221,6 @@ class _MySqlPageState extends State<MySqlPage> {
                             GestureDetector(
                               onTap: () {
                                 DatePicker.showDatePicker(context,
-                                    showTitleActions: true,
                                     onChanged: (date) {}, onConfirm: (date) {
                                   setState(() {
                                     _mydatetime = date;
@@ -251,7 +250,7 @@ class _MySqlPageState extends State<MySqlPage> {
                             ),
                             ElevatedButton(
                               onPressed: () async {
-                                Memo _memo = Memo(
+                                final Memo _memo = Memo(
                                   text: myController.text,
                                   id: const Uuid().hashCode,
                                   subtext: subDataController.text,

@@ -8,11 +8,11 @@ import 'package:intl/intl.dart';
 class AboutView extends StatefulWidget {
   final memoList;
   final index;
-  final selectedvalue;
+  final selectedValue;
   const AboutView({
     required this.memoList,
     required this.index,
-    required this.selectedvalue,
+    required this.selectedValue,
   });
   @override
   AboutViewState createState() => AboutViewState();
@@ -28,7 +28,7 @@ class AboutViewState extends State<AboutView> {
 
     var memoList = widget.memoList;
     final index = widget.index;
-    var selectedvalue = widget.selectedvalue;
+    final selectedValue = widget.selectedValue;
     final upDateController = TextEditingController();
     final upDateSubController = TextEditingController();
 
@@ -67,8 +67,8 @@ class AboutViewState extends State<AboutView> {
 
                             ElevatedButton(
                               onPressed: () async {
-                                Memo updateMemo = Memo(
-                                    id: selectedvalue,
+                                final Memo updateMemo = Memo(
+                                    id: selectedValue,
                                     text: upDateController.text,
                                     subtext: memoList[index].subtext,
                                     createdDate: memoList[index].createdDate,
@@ -107,6 +107,7 @@ class AboutViewState extends State<AboutView> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Row(
+                  // ignore: prefer_const_literals_to_create_immutables
                   children: <Widget>[
                     const Icon(Icons.edit),
                     const Padding(
@@ -153,8 +154,8 @@ class AboutViewState extends State<AboutView> {
                             ),
                             ElevatedButton(
                                 onPressed: () async {
-                                  Memo updateMemo = Memo(
-                                      id: selectedvalue,
+                                  final Memo updateMemo = Memo(
+                                      id: selectedValue,
                                       text: memoList[index].text,
                                       subtext: upDateSubController.text,
                                       createdDate: memoList[index].createdDate,
@@ -247,6 +248,7 @@ class AboutViewState extends State<AboutView> {
           ),
         ),
         Card(
+          // ignore: sized_box_for_whitespace
           child: Container(
             height: 60,
             child: Padding(
