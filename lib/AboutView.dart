@@ -6,8 +6,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 class AboutView extends StatefulWidget {
-  //final myController;
-  //final subDataController;
   final memoList;
   final index;
   final selectedvalue;
@@ -15,8 +13,6 @@ class AboutView extends StatefulWidget {
     required this.memoList,
     required this.index,
     required this.selectedvalue,
-    //this.subDataController,
-    //this.myController
   });
   @override
   AboutViewState createState() => AboutViewState();
