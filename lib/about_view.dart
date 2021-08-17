@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:food_records/HomeListView.dart';
-import 'package:food_records/sqlLite.dart';
+import 'package:food_records/home_list_view.dart';
+import 'package:food_records/sql_lite.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
@@ -9,7 +9,7 @@ class AboutView extends StatefulWidget {
   final memoList;
   final index;
   final selectedvalue;
-  AboutView({
+  const AboutView({
     required this.memoList,
     required this.index,
     required this.selectedvalue,
@@ -25,9 +25,6 @@ class AboutViewState extends State<AboutView> {
       initializeDateFormatting('ja');
       return DateFormat.yMMMd('ja').format(DateTime.now()).toString();
     }
-
-    // final myController = widget.myController;
-    // final subDataController = widget.subDataController;
 
     var memoList = widget.memoList;
     final index = widget.index;
@@ -49,12 +46,13 @@ class AboutViewState extends State<AboutView> {
                         return Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Text('食べ物'),
+                            const Text('食べ物'),
+                            // ignore: avoid_unnecessary_containers
                             Container(
                               child: Flexible(
                                 flex: 3,
                                 child: TextField(
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       enabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
                                           color: Colors.blue,
@@ -66,8 +64,8 @@ class AboutViewState extends State<AboutView> {
                                     controller: upDateController),
                               ),
                             ),
-                            RaisedButton(
-                              child: Text('更新'),
+
+                            ElevatedButton(
                               onPressed: () async {
                                 Memo updateMemo = Memo(
                                     id: selectedvalue,
@@ -83,14 +81,17 @@ class AboutViewState extends State<AboutView> {
                                 });
                                 upDateController.clear();
                                 upDateSubController.clear();
+                                // ignore: use_build_context_synchronously
                                 Navigator.pop(context);
+                                // ignore: use_build_context_synchronously
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => MySqlPage()),
                                 );
                               },
-                            ),
+                              child: const Text('更新'),
+                            )
                           ],
                         );
                       },
@@ -100,15 +101,16 @@ class AboutViewState extends State<AboutView> {
           },
           child: Card(
             color: Colors.blue,
+            // ignore: sized_box_for_whitespace
             child: Container(
               height: 60,
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Row(
-                  children: [
-                    Icon(Icons.edit),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
+                  children: <Widget>[
+                    const Icon(Icons.edit),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 8.0),
                       child: Text(
                         "食べ物を編集する",
                         style: TextStyle(fontWeight: FontWeight.bold),
@@ -131,12 +133,13 @@ class AboutViewState extends State<AboutView> {
                         return Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Text('備考欄'),
+                            const Text('備考欄'),
+                            // ignore: avoid_unnecessary_containers
                             Container(
                               child: Flexible(
                                 flex: 3,
                                 child: TextField(
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       enabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
                                           color: Colors.blue,
@@ -148,31 +151,33 @@ class AboutViewState extends State<AboutView> {
                                     controller: upDateSubController),
                               ),
                             ),
-                            RaisedButton(
-                              child: Text('更新'),
-                              onPressed: () async {
-                                Memo updateMemo = Memo(
-                                    id: selectedvalue,
-                                    text: memoList[index].text,
-                                    subtext: upDateSubController.text,
-                                    createdDate: memoList[index].createdDate,
-                                    eatDate: memoList[index].eatDate,
-                                    updateDate: getUpdateDate());
-                                await Memo.updateMemo(updateMemo);
-                                final List<Memo> memos = await Memo.getMemos();
-                                super.setState(() {
-                                  memoList = memos;
-                                });
-                                upDateController.clear();
-                                upDateSubController.clear();
-                                Navigator.pop(context);
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MySqlPage()),
-                                );
-                              },
-                            ),
+                            ElevatedButton(
+                                onPressed: () async {
+                                  Memo updateMemo = Memo(
+                                      id: selectedvalue,
+                                      text: memoList[index].text,
+                                      subtext: upDateSubController.text,
+                                      createdDate: memoList[index].createdDate,
+                                      eatDate: memoList[index].eatDate,
+                                      updateDate: getUpdateDate());
+                                  await Memo.updateMemo(updateMemo);
+                                  final List<Memo> memos =
+                                      await Memo.getMemos();
+                                  super.setState(() {
+                                    memoList = memos;
+                                  });
+                                  upDateController.clear();
+                                  upDateSubController.clear();
+                                  // ignore: use_build_context_synchronously
+                                  Navigator.pop(context);
+                                  // ignore: use_build_context_synchronously
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MySqlPage()),
+                                  );
+                                },
+                                child: const Text('更新')),
                           ],
                         );
                       },
@@ -182,15 +187,17 @@ class AboutViewState extends State<AboutView> {
           },
           child: Card(
             color: Colors.blue,
+            // ignore: sized_box_for_whitespace
             child: Container(
               height: 60,
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Row(
+                  // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                    Icon(Icons.edit),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
+                    const Icon(Icons.edit),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 8.0),
                       child: Text(
                         "備考欄を編集する",
                         style: TextStyle(fontWeight: FontWeight.bold),
@@ -204,11 +211,12 @@ class AboutViewState extends State<AboutView> {
         ),
         GestureDetector(
           onTap: () async {
-            await Memo.deleteMemo(memoList[index].id);
+            await Memo.deleteMemo(memoList[index].id.hashCode);
             final List<Memo> memos = await Memo.getMemos();
             setState(() {
               memoList = memos;
             });
+            // ignore: use_build_context_synchronously
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => MySqlPage()),
@@ -216,15 +224,17 @@ class AboutViewState extends State<AboutView> {
           },
           child: Card(
             color: Colors.redAccent,
+            // ignore: sized_box_for_whitespace
             child: Container(
               height: 60,
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Row(
+                  // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                    Icon(Icons.delete_forever),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
+                    const Icon(Icons.delete_forever),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 8.0),
                       child: Text(
                         "削除する",
                         style: TextStyle(fontWeight: FontWeight.bold),
@@ -245,7 +255,7 @@ class AboutViewState extends State<AboutView> {
                 children: [
                   Text(
                     "作成日：${memoList[index].createdDate}",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -253,6 +263,7 @@ class AboutViewState extends State<AboutView> {
           ),
         ),
         Card(
+          // ignore: sized_box_for_whitespace
           child: Container(
             height: 60,
             child: Padding(
@@ -261,7 +272,7 @@ class AboutViewState extends State<AboutView> {
                 children: [
                   Text(
                     "ID：${memoList[index].id}",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -269,6 +280,7 @@ class AboutViewState extends State<AboutView> {
           ),
         ),
         Card(
+          // ignore: sized_box_for_whitespace
           child: Container(
             height: 60,
             child: Padding(
@@ -277,7 +289,7 @@ class AboutViewState extends State<AboutView> {
                 children: [
                   Text(
                     "更新日：${memoList[index].updateDate}",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),

@@ -2,12 +2,12 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Memo {
-  final int id;
-  final String text;
-  final String subtext;
-  final String createdDate;
-  final String eatDate;
-  final String updateDate;
+  final id;
+  final text;
+  final subtext;
+  final createdDate;
+  final eatDate;
+  final updateDate;
   Memo(
       {required this.id,
       required this.text,

@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:food_records/AboutView.dart';
-import 'package:food_records/sqlLite.dart';
+import 'package:food_records/about_view.dart';
+import 'package:food_records/sql_lite.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'dart:async';
 import 'package:uuid/uuid.dart';
 
 void main() {
@@ -42,9 +41,9 @@ class _MySqlPageState extends State<MySqlPage> {
   var selectedvalue;
 
   // 選択した日時を格納する変数
-  var _mydatetime = new DateTime.now();
+  var _mydatetime = DateTime.now();
 
-  var formatter = new DateFormat('yyyy/MM/dd');
+  DateFormat formatter = DateFormat('yyyy/MM/dd');
 
   String getTodayDate() {
     initializeDateFormatting('ja');
@@ -68,19 +67,19 @@ class _MySqlPageState extends State<MySqlPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           '毎日のご飯記録',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
       ),
       body: Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: FutureBuilder(
           future: initializeDemo(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             }
@@ -98,7 +97,7 @@ class _MySqlPageState extends State<MySqlPage> {
                           children: [
                             Text(
                               'ID ${memoList[index].id}',
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -108,10 +107,6 @@ class _MySqlPageState extends State<MySqlPage> {
                               child: SizedBox(
                                 height: 20,
                                 child: ElevatedButton(
-                                  child: const Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: 15,
-                                  ),
                                   style: ElevatedButton.styleFrom(
                                     primary: Colors.blueGrey,
                                     onPrimary: Colors.white,
@@ -131,6 +126,10 @@ class _MySqlPageState extends State<MySqlPage> {
                                               )),
                                     );
                                   },
+                                  child: const Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 15,
+                                  ),
                                 ),
                               ),
                             ),
@@ -139,17 +138,16 @@ class _MySqlPageState extends State<MySqlPage> {
 
                         Text(
                           '${memoList[index].text}',
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
 
                         Padding(
                           padding: const EdgeInsets.only(bottom: 6.0),
                           child: Text(
                             "${memoList[index].subtext}",
-                            style: TextStyle(),
                           ),
                         ),
-                        Divider(
+                        const Divider(
                           height: 1,
                           color: Colors.grey,
                         ),
@@ -176,23 +174,22 @@ class _MySqlPageState extends State<MySqlPage> {
         children: <Widget>[
           FloatingActionButton(
             backgroundColor: Colors.blueGrey[900],
-            child: Icon(Icons.add),
             onPressed: () {
               showDialog(
                   context: context,
                   builder: (_) => AlertDialog(
-                        title: Text("記録する"),
+                        title: const Text("記録する"),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 6.0),
+                            const Padding(
+                              padding: EdgeInsets.only(bottom: 6.0),
                               child: Text(
                                 '料理名',
                               ),
                             ),
                             TextField(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Colors.blue,
@@ -203,15 +200,14 @@ class _MySqlPageState extends State<MySqlPage> {
                               maxLines: 5,
                               minLines: 3,
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 8.0, bottom: 6.0),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 8.0, bottom: 6.0),
                               child: Text(
                                 '備考欄',
                               ),
                             ),
                             TextField(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Colors.blue,
@@ -225,10 +221,8 @@ class _MySqlPageState extends State<MySqlPage> {
                             GestureDetector(
                               onTap: () {
                                 DatePicker.showDatePicker(context,
-                                    showTitleActions: true, onChanged: (date) {
-                                  print('change $date');
-                                }, onConfirm: (date) {
-                                  print("Done $date");
+                                    showTitleActions: true,
+                                    onChanged: (date) {}, onConfirm: (date) {
                                   setState(() {
                                     _mydatetime = date;
                                     dateDone = true;
@@ -243,7 +237,7 @@ class _MySqlPageState extends State<MySqlPage> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.calendar_today,
                                       color: Colors.redAccent,
                                     ),
@@ -255,12 +249,11 @@ class _MySqlPageState extends State<MySqlPage> {
                                 ),
                               ),
                             ),
-                            RaisedButton(
-                              child: Text('保存'),
+                            ElevatedButton(
                               onPressed: () async {
                                 Memo _memo = Memo(
                                   text: myController.text,
-                                  id: Uuid().hashCode,
+                                  id: const Uuid().hashCode,
                                   subtext: subDataController.text,
                                   createdDate: getTodayDate(),
                                   eatDate: formatter.format(_mydatetime),
@@ -275,15 +268,18 @@ class _MySqlPageState extends State<MySqlPage> {
 
                                 myController.clear();
                                 subDataController.clear();
+                                // ignore: use_build_context_synchronously
                                 Navigator.pop(context);
                               },
-                            ),
+                              child: const Text('保存'),
+                            )
                           ],
                         ),
                       ));
             },
+            child: const Icon(Icons.add),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
         ],
       ),
     );
