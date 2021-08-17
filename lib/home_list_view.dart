@@ -38,7 +38,7 @@ class _MySqlPageState extends State<MySqlPage> {
   final upDateController = TextEditingController();
   final upDateSubController = TextEditingController();
 
-  var selectedvalue;
+  dynamic selectedValue;
 
   // 選択した日時を格納する変数
   var _mydatetime = DateTime.now();
@@ -262,7 +262,7 @@ class _MySqlPageState extends State<MySqlPage> {
                                 final List<Memo> memos = await Memo.getMemos();
                                 setState(() {
                                   memoList = memos;
-                                  selectedvalue = selectedvalue;
+                                  selectedValue = selectedValue;
                                 });
 
                                 myController.clear();

@@ -5,11 +5,13 @@ import 'package:food_records/sql_lite.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
+// ignore: must_be_immutable
 class AboutView extends StatefulWidget {
-  final memoList;
-  final index;
-  final selectedValue;
-  const AboutView({
+  dynamic memoList;
+  dynamic index;
+  dynamic selectedValue;
+
+  AboutView({
     required this.memoList,
     required this.index,
     required this.selectedValue,
@@ -47,8 +49,7 @@ class AboutViewState extends State<AboutView> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             const Text('食べ物'),
-                            // ignore: avoid_unnecessary_containers
-                            Container(
+                            SizedBox(
                               child: Flexible(
                                 flex: 3,
                                 child: TextField(
@@ -64,7 +65,6 @@ class AboutViewState extends State<AboutView> {
                                     controller: upDateController),
                               ),
                             ),
-
                             ElevatedButton(
                               onPressed: () async {
                                 final Memo updateMemo = Memo(
@@ -101,8 +101,7 @@ class AboutViewState extends State<AboutView> {
           },
           child: Card(
             color: Colors.blue,
-            // ignore: sized_box_for_whitespace
-            child: Container(
+            child: SizedBox(
               height: 60,
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
@@ -135,8 +134,7 @@ class AboutViewState extends State<AboutView> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             const Text('備考欄'),
-                            // ignore: avoid_unnecessary_containers
-                            Container(
+                            SizedBox(
                               child: Flexible(
                                 flex: 3,
                                 child: TextField(
